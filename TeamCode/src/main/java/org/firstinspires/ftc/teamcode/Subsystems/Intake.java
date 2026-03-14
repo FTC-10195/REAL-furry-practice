@@ -45,7 +45,7 @@ public class Intake {
         currentStates = newState;
 
     }
-    public States getState(){
+    public States getCurrentState(){
         return currentStates;
     }
 }

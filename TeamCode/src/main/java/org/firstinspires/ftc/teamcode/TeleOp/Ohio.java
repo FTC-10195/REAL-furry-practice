@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.Subsystems.Gate.States.CLOSE;
+import static org.firstinspires.ftc.teamcode.Subsystems.Gate.States.OPEN;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.OFF;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.ON;
 
@@ -9,7 +11,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Gate;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Timer;
 
 @TeleOp
 public class Ohio extends LinearOpMode {
@@ -21,6 +25,8 @@ public class Ohio extends LinearOpMode {
         drivetrain.initiate(hardwareMap);
         Intake intake = new Intake();
         intake.initiate(hardwareMap);
+        Gate gate = new Gate();
+        gate.initiate(hardwareMap);
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -28,7 +34,7 @@ public class Ohio extends LinearOpMode {
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
             if (gamepad1.rightBumperWasPressed()){
-                switch (intake.getState()){
+                switch (intake.getCurrentState()){
                     case OFF:
                         intake.setState(ON);
                         break;
@@ -39,6 +45,17 @@ public class Ohio extends LinearOpMode {
                 }
 
             }
+            if (gamepad1.rightTriggerWasPressed()) {
+                switch (gate.getCurrentState()) {
+                    case OPEN:
+                        gate.setCurrentState(CLOSE);
+                        break;
+                    case CLOSE:
+                        gate.setCurrentState(OPEN);
+                        break;
+                }
+            }
+
 
             drivetrain.update(x, y, rx);
         }
