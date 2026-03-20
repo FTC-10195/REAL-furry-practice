@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Flywheel {
@@ -16,6 +17,7 @@ public class Flywheel {
     public void initiate(HardwareMap hardwareMap){
         FW1 = hardwareMap.dcMotor.get("FW1");
         FW2 = hardwareMap.dcMotor.get("FW2");
+        FW2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setCurrentStates(States newState){currentStates = newState;}
     public States getCurrentStates() {

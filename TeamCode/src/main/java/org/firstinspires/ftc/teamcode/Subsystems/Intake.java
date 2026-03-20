@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.sun.tools.javac.util.SharedNameTable;
 
@@ -22,6 +23,7 @@ public class Intake {
         Transfer = hardwareMap.dcMotor.get("Transfer");
         Intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Transfer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Intake.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void update() {
