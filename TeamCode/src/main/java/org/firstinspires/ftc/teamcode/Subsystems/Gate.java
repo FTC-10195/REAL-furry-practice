@@ -9,34 +9,33 @@ public class Gate {
         CLOSE
     }
 
-    States currentState = States.CLOSE;
-    Servo gate;
+    States currentStates = States.CLOSE;
+    Servo Gate;
     public double openPosition = 0.7;
     public double closePosition = 0.5;
     public void initiate(HardwareMap hardwareMap) {
-        gate = hardwareMap.servo.get("gate");
-
+        Gate = hardwareMap.servo.get("gate");
     }
 
     public void setCurrentState(States newState) {
-        currentState = newState;
+        currentStates = newState;
     }
 
     public States getCurrentState() {
-        return currentState;
+        return currentStates;
     }
-
-    public void shoot() {
-        setCurrentState(States.OPEN);
-    }
-
-    public void update() {
-        if (currentState == States.OPEN){
-            gate.setPosition(openPosition);
-        }else{
-            gate.setPosition(closePosition);
+    public void update(){
+        switch (currentStates){
+            case OPEN:
+                Gate.setPosition(openPosition);
+                break;
+            case CLOSE:
+                Gate.setPosition(closePosition);
+                break;
         }
     }
+
+
 
 
 }

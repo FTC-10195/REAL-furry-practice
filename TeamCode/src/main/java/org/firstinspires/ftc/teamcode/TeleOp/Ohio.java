@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.Subsystems.Gate;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Timer;
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Timer;
 public class Ohio extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-
         waitForStart();
         Drivetrain drivetrain = new Drivetrain();
         drivetrain.initiate(hardwareMap);
@@ -27,6 +27,8 @@ public class Ohio extends LinearOpMode {
         intake.initiate(hardwareMap);
         Gate gate = new Gate();
         gate.initiate(hardwareMap);
+        Flywheel flywheel = new Flywheel();
+        flywheel.initiate(hardwareMap);
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -55,9 +57,23 @@ public class Ohio extends LinearOpMode {
                         break;
                 }
             }
+            if (gamepad1.leftTriggerWasPressed()){
+                switch (flywheel.getCurrentStates()){
+                    case ON:
+                        flywheel.setCurrentStates(Flywheel.States.OFF);
+                        break;
+                    case OFF:
+                        flywheel.setCurrentStates(Flywheel.States.ON);
+                        break;
+                }
+            }
+            
 
 
             drivetrain.update(x, y, rx);
+            intake.update();
+            flywheel.update();
+            gate.update();
         }
     }
 }
