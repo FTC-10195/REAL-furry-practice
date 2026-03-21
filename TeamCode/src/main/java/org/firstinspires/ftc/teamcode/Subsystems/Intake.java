@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.sun.tools.javac.util.SharedNameTable;
-
+@Config
 public class Intake {
     public enum States {
         ON,
@@ -13,7 +14,7 @@ public class Intake {
     }
 
     public States currentStates = States.OFF;
-    public static double intakePower = 0.6;
+    public static double intakePower = 1;
     public static double ejectPower = -0.6;
     DcMotor Intake;
     DcMotor Transfer;
