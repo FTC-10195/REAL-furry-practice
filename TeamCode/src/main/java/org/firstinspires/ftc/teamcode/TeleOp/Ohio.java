@@ -36,7 +36,7 @@ public class Ohio extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
-            if (gamepad1.rightBumperWasPressed()) {
+            if (gamepad1.leftTriggerWasPressed()) {
                 switch (intake.getCurrentState()) {
                     case OFF:
                         intake.setState(ON);
@@ -59,25 +59,17 @@ public class Ohio extends LinearOpMode {
                 intake.setState(OFF);
             }
             if (gamepad1.rightTriggerWasPressed()) {
-                switch (gate.getCurrentState()) {
-                    case OPEN:
-                        gate.setCurrentState(CLOSE);
-                        break;
-                    case CLOSE:
-                        gate.setCurrentState(OPEN);
-                        break;
-                }
-            }
-            if (gamepad1.leftTriggerWasPressed()) {
                 switch (flywheel.getCurrentStates()) {
                     case ON:
-                        flywheel.setCurrentStates(Flywheel.States.OFF);
+                        gate.setCurrentState(OPEN);
+                        intake.setState(ON);
                         break;
                     case OFF:
-                        flywheel.setCurrentStates(Flywheel.States.ON);
+                        flywheel.setState(Flywheel.States.ON);
                         break;
                 }
             }
+
             if (gamepad1.dpadUpWasPressed()){
                 flywheel.increase();
             }
@@ -90,6 +82,9 @@ public class Ohio extends LinearOpMode {
             intake.update();
             flywheel.update();
             gate.update();
+
+            flywheel.status(telemetry);
+            telemetry.update();
         }
     }
 }

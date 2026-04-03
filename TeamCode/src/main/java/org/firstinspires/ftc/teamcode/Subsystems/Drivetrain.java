@@ -16,7 +16,7 @@ public class Drivetrain {
         fR = hardwareMap.dcMotor.get("fR");
         bL = hardwareMap.dcMotor.get("bL");
         bR = hardwareMap.dcMotor.get("bR");
-        fR.setDirection(DcMotorSimple.Direction.REVERSE);
+        fL.setDirection(DcMotorSimple.Direction.REVERSE);
         bL.setDirection(DcMotorSimple.Direction.REVERSE);
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -29,14 +29,14 @@ public class Drivetrain {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = -(y + x + rx) / denominator;
-        double backLeftPower = -(y - x + rx) / denominator;
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
         fL.setPower(frontLeftPower);
-        fR.setPower(backLeftPower);
-        bL.setPower(frontRightPower);
+        fR.setPower(frontRightPower);
+        bL.setPower(backLeftPower);
         bR.setPower(backRightPower);
     }
 }

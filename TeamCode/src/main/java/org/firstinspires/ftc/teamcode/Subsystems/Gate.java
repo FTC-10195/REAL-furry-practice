@@ -13,7 +13,7 @@ public class Gate {
     States currentStates = States.CLOSE;
     Servo Gate;
     public static double openPosition = 0.2;
-    public static double closePosition = 0.45;
+    public static double closePosition = 0.4;
     public void initiate(HardwareMap hardwareMap) {
         Gate = hardwareMap.servo.get("gate");
     }
