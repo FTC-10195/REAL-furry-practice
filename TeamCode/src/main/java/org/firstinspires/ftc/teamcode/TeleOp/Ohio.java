@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Subsystems.Gate.States.OPEN;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.EJECT;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.OFF;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.ON;
+import static org.firstinspires.ftc.teamcode.Subsystems.Timer.timer;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -31,8 +32,7 @@ public class Ohio extends LinearOpMode {
         Flywheel flywheel = new Flywheel();
         flywheel.initiate(hardwareMap);
         if (isStopRequested()) return;
-
-        while (opModeIsActive()) {
+            while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
@@ -61,8 +61,16 @@ public class Ohio extends LinearOpMode {
             if (gamepad1.rightTriggerWasPressed()) {
                 switch (flywheel.getCurrentStates()) {
                     case ON:
-                        gate.setCurrentState(OPEN);
                         intake.setState(ON);
+                        gate.setCurrentState(OPEN);
+                        Timer.timer.setWaitTime(1100);
+                        while (opModeIsActive() && !timer.doneWaiting()) {
+                            intake.update();
+                            gate.update();
+                        }
+                        gate.setCurrentState(CLOSE);
+                        intake.setState(OFF);
+                        gate.update();
                         break;
                     case OFF:
                         flywheel.setState(Flywheel.States.ON);

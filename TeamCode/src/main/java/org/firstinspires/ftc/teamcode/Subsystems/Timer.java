@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Timer {
     long timeSnapshot;
     long waitTime = 0;
+    public static Timer timer = new Timer();
     public Timer(){
         this.waitTime = 0;
         timeSnapshot = System.currentTimeMillis();
