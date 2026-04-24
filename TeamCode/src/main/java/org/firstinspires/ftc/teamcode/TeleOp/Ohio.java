@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.Subsystems.Gate;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Timer;
 
 @TeleOp
@@ -31,8 +32,12 @@ public class Ohio extends LinearOpMode {
         gate.initiate(hardwareMap);
         Flywheel flywheel = new Flywheel();
         flywheel.initiate(hardwareMap);
-        if (isStopRequested()) return;
-            while (opModeIsActive()) {
+        Limelight limelight = new Limelight();
+        limelight.initiate(hardwareMap);
+        if (isStopRequested()) {
+            return;
+        }
+        while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
@@ -47,16 +52,44 @@ public class Ohio extends LinearOpMode {
 
                 }
             }
-            if (gamepad1.leftBumperWasPressed()){
+            if (gamepad1.leftBumperWasPressed()) {
                 intake.setState(OFF);
                 flywheel.setState(Flywheel.States.OFF);
                 gate.setCurrentState(CLOSE);
             }
-            if (gamepad1.square){
+            if (gamepad1.square) {
                 intake.setState(EJECT);
             }
-            if (gamepad1.squareWasReleased()){
+            if (gamepad1.squareWasReleased()) {
                 intake.setState(OFF);
+            }
+            if (gamepad1.xWasPressed()) {
+                switch (limelight.getState()) {
+                    case OFF:
+                        limelight.setState(Limelight.State.ON);
+                        break;
+                    case ON:
+                        limelight.setState(Limelight.State.OFF);
+                        break;
+                }
+            }
+            if (limelight.getState() == Limelight.State.ON) {
+                if (gamepad1.triangleWasPressed()) {
+                    switch (limelight.getTarget()) {
+                        case NONE:
+                            limelight.setTarget(Limelight.Target.BLUE);
+                            break;
+                        case BLUE:
+                            limelight.setTarget(Limelight.Target.RED);
+                            break;
+                        case RED:
+                            limelight.setTarget(Limelight.Target.NONE);
+                            break;
+                    }
+                }
+                rx += limelight.output;
+
+
             }
             if (gamepad1.rightTriggerWasPressed()) {
                 switch (flywheel.getCurrentStates()) {
@@ -78,10 +111,10 @@ public class Ohio extends LinearOpMode {
                 }
             }
 
-            if (gamepad1.dpadUpWasPressed()){
+            if (gamepad1.dpadUpWasPressed()) {
                 flywheel.increase();
             }
-            if (gamepad1.dpadDownWasPressed()){
+            if (gamepad1.dpadDownWasPressed()) {
                 flywheel.decrease();
             }
 
@@ -90,10 +123,12 @@ public class Ohio extends LinearOpMode {
             intake.update();
             flywheel.update();
             gate.update();
+            limelight.update();
 
             flywheel.status(telemetry);
             telemetry.update();
         }
     }
+
 }
 
