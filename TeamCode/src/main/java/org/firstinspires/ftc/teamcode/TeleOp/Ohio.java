@@ -63,7 +63,7 @@ public class Ohio extends LinearOpMode {
             if (gamepad1.squareWasReleased()) {
                 intake.setState(OFF);
             }
-            if (gamepad1.xWasPressed()) {
+            if (gamepad1.crossWasPressed()) {
                 switch (limelight.getState()) {
                     case OFF:
                         limelight.setState(Limelight.State.ON);
@@ -123,7 +123,7 @@ public class Ohio extends LinearOpMode {
             intake.update();
             flywheel.update();
             gate.update();
-            limelight.update();
+            limelight.update(telemetry);
 
             flywheel.status(telemetry);
             telemetry.update();

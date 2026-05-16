@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /* DO NOT PUSH
 NO NOT PUSH
@@ -11,6 +14,7 @@ DO NOT PUSH
 DO NOT PUSH
 DO NOT PUSH
  */
+@Config
 public class Limelight {
     public enum State {
         ON,
@@ -46,7 +50,7 @@ public class Limelight {
     public static int blueID = 20;
     public static int redID = 24;
     public double output = 0;
-    public static double p = 0.1;
+    public static double p = 0.02;
 
     public void initiate(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -54,7 +58,10 @@ public class Limelight {
         limelight.start();
     }
 
-    public void update() {
+    public void update(Telemetry telemetry) {
+        telemetry.addData("Limelight State", getState());
+        telemetry.addData("output", output);
+        telemetry.addData("target", getTarget());
         LLResult result = limelight.getLatestResult();
         if (currentState == State.OFF) {
             output = 0;
