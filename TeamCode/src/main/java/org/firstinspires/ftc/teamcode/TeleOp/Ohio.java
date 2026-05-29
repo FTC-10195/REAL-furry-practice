@@ -18,6 +18,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Gate;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Timer;
+import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.TeamColor;
 
 @TeleOp
 public class Ohio extends LinearOpMode {
@@ -34,6 +36,8 @@ public class Ohio extends LinearOpMode {
         flywheel.initiate(hardwareMap);
         Limelight limelight = new Limelight();
         limelight.initiate(hardwareMap);
+        Turret turret = new Turret();
+        turret.initiate(hardwareMap);
         if (isStopRequested()) {
             return;
         }
@@ -52,6 +56,9 @@ public class Ohio extends LinearOpMode {
 
                 }
             }
+            if (gamepad1.optionsWasPressed()){
+                TeamColor.switchTeam();
+            }
             if (gamepad1.leftBumperWasPressed()) {
                 intake.setState(OFF);
                 flywheel.setState(Flywheel.States.OFF);
@@ -63,6 +70,17 @@ public class Ohio extends LinearOpMode {
             if (gamepad1.squareWasReleased()) {
                 intake.setState(OFF);
             }
+            if (gamepad1.triangleWasPressed()){
+                switch(turret.currentTurretState){
+                    case AIM:
+                        turret.setTurretState(Turret.States.MANUAL);
+                        break;
+                    case MANUAL:
+                        turret.setTurretState(Turret.States.AIM);
+                        break;
+                }
+            }
+            /*
             if (gamepad1.crossWasPressed()) {
                 switch (limelight.getState()) {
                     case OFF:
@@ -89,8 +107,8 @@ public class Ohio extends LinearOpMode {
                 }
                 rx += limelight.output;
 
-
             }
+            */
             if (gamepad1.rightTriggerWasPressed()) {
                 switch (flywheel.getCurrentStates()) {
                     case ON:
@@ -123,8 +141,9 @@ public class Ohio extends LinearOpMode {
             intake.update();
             flywheel.update();
             gate.update();
+            turret.update();
             limelight.update(telemetry);
-
+            TeamColor.update(telemetry);
             flywheel.status(telemetry);
             telemetry.update();
         }

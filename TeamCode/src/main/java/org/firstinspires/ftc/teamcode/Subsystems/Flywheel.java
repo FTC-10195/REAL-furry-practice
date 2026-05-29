@@ -27,8 +27,12 @@ public class Flywheel {
     public static double targetVelocity = 1250;
     public static double kF = 0.00041;
     public static double kP = 0.002;
+    public static double dynamicTargetVelocity;
     public double pid(double velocity, double targetVelocity){
         return (targetVelocity - velocity) * kP;
+    }
+    public void calculateFlywheelVelocity(){
+        
     }
     public double feedForward(double targetVelocity, double voltage){
         return targetVelocity * kF * 12 / voltage;
@@ -61,6 +65,7 @@ public class Flywheel {
         }
         FW2.setPower(FW1.getPower());
     }
+
     public void status(Telemetry telemetry){
         telemetry.addLine("FLYWHEEL");
         telemetry.addData("Power",FW1.getPower());
