@@ -31,9 +31,6 @@ public class Flywheel {
     public double pid(double velocity, double targetVelocity){
         return (targetVelocity - velocity) * kP;
     }
-    public void calculateFlywheelVelocity(){
-        
-    }
     public double feedForward(double targetVelocity, double voltage){
         return targetVelocity * kF * 12 / voltage;
     }
