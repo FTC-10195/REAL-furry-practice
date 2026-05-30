@@ -7,11 +7,14 @@ import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.OFF;
 import static org.firstinspires.ftc.teamcode.Subsystems.Intake.States.ON;
 import static org.firstinspires.ftc.teamcode.Subsystems.Timer.timer;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Localizer;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.Subsystems.Gate;
@@ -34,10 +37,13 @@ public class Ohio extends LinearOpMode {
         gate.initiate(hardwareMap);
         Flywheel flywheel = new Flywheel();
         flywheel.initiate(hardwareMap);
-        Limelight limelight = new Limelight();
-        limelight.initiate(hardwareMap);
+        Localizer localizer = new Localizer();
+        localizer.initiate(hardwareMap);
+        //Limelight limelight = new Limelight();
+        //limelight.initiate(hardwareMap);
         Turret turret = new Turret();
         turret.initiate(hardwareMap);
+        TelemetryPacket telemetryPacket = new TelemetryPacket();
         if (isStopRequested()) {
             return;
         }
@@ -141,10 +147,14 @@ public class Ohio extends LinearOpMode {
             intake.update();
             flywheel.update();
             gate.update();
-            turret.update();
-            limelight.update(telemetry);
+            turret.update(telemetry);
+            turret.ftcDashboardUpdate(telemetryPacket);
+            //limelight.update(telemetry);
             TeamColor.update(telemetry);
             flywheel.status(telemetry);
+            localizer.update(telemetry);
+            localizer.ftcDashboardUpdate(telemetryPacket);
+            FtcDashboard.getInstance().sendTelemetryPacket(telemetryPacket);
             telemetry.update();
         }
     }
