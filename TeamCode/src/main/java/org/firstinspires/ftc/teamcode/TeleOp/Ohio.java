@@ -11,15 +11,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Localizer;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Flywheel;
 import org.firstinspires.ftc.teamcode.Subsystems.Gate;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Timer;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.TeamColor;
@@ -39,8 +36,6 @@ public class Ohio extends LinearOpMode {
         flywheel.initiate(hardwareMap);
         Localizer localizer = new Localizer();
         localizer.initiate(hardwareMap);
-        //Limelight limelight = new Limelight();
-        //limelight.initiate(hardwareMap);
         Turret turret = new Turret();
         turret.initiate(hardwareMap);
         TelemetryPacket telemetryPacket = new TelemetryPacket();
@@ -86,38 +81,9 @@ public class Ohio extends LinearOpMode {
                         break;
                 }
             }
-            /*
-            if (gamepad1.crossWasPressed()) {
-                switch (limelight.getState()) {
-                    case OFF:
-                        limelight.setState(Limelight.State.ON);
-                        break;
-                    case ON:
-                        limelight.setState(Limelight.State.OFF);
-                        break;
-                }
-            }
-            if (limelight.getState() == Limelight.State.ON) {
-                if (gamepad1.triangleWasPressed()) {
-                    switch (limelight.getTarget()) {
-                        case NONE:
-                            limelight.setTarget(Limelight.Target.BLUE);
-                            break;
-                        case BLUE:
-                            limelight.setTarget(Limelight.Target.RED);
-                            break;
-                        case RED:
-                            limelight.setTarget(Limelight.Target.NONE);
-                            break;
-                    }
-                }
-                rx += limelight.output;
-
-            }
-            */
             if (gamepad1.rightTriggerWasPressed()) {
                 switch (flywheel.getCurrentStates()) {
-                    case ON:
+                    case MANUAL:
                         intake.setState(ON);
                         gate.setCurrentState(OPEN);
                         Timer.timer.setWaitTime(1100);
@@ -130,7 +96,7 @@ public class Ohio extends LinearOpMode {
                         gate.update();
                         break;
                     case OFF:
-                        flywheel.setState(Flywheel.States.ON);
+                        flywheel.setState(Flywheel.States.MANUAL);
                         break;
                 }
             }
@@ -149,7 +115,6 @@ public class Ohio extends LinearOpMode {
             gate.update();
             turret.update(telemetry);
             turret.ftcDashboardUpdate(telemetryPacket);
-            //limelight.update(telemetry);
             TeamColor.update(telemetry);
             flywheel.status(telemetry);
             localizer.update(telemetry);

@@ -27,6 +27,7 @@ public class Turret {
     private double deltaX = 0;
     private double deltaY = 0;
     private double theta = 0;
+    private double heading = 0;
     private double targetRadians;
     private double targetTicks;
 
@@ -49,7 +50,10 @@ public class Turret {
         deltaX = Localizer.getGoalPosition().getX() - Localizer.getPose().getX();
         deltaY = Localizer.getGoalPosition().getY() - Localizer.getPose().getY();
         theta = Math.atan2(deltaY, deltaX); //In Radians
-        targetRadians = theta - Localizer.getPose().getHeading();
+        targetRadians = theta - heading;
+        if (targetRadians > Math.PI){
+            targetRadians = -((2 * Math.PI) - targetRadians);
+        }
         targetTicks = calculateRadiansToTicks(targetRadians);
     }
 
@@ -62,6 +66,7 @@ public class Turret {
         telemetryPacket.put("Target Ticks", targetTicks);
     }
     public void update(Telemetry telemetry){
+        heading = Localizer.getPose().getHeading();
         switch (currentTurretState) {
             case AIM:
                 calculateTurretAngle();

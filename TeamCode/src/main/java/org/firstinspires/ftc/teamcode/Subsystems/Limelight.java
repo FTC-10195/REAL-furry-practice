@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 /* DO NOT PUSH
 NO NOT PUSH
@@ -16,20 +20,15 @@ DO NOT PUSH
  */
 @Config
 public class Limelight {
-    public enum State {
-        ON,
-        OFF;
-    }
 
     public enum Target {
         RED,
         BLUE,
         NONE;
     }
-
-    State currentState = State.OFF;
     Target currentTarget = Target.NONE;
     Limelight3A limelight;
+    Pose pose = new Pose();
 
     public void setTarget(Target target) {
         currentTarget = target;
@@ -39,12 +38,21 @@ public class Limelight {
         return currentTarget;
     }
 
-    public void setState(State state) {
-        currentState = state;
-    }
 
-    public State getState() {
-        return currentState;
+    public Pose getLimelightPose(){
+        return pose;
+    }
+    public boolean canSeeTag = false;
+    public void translateLLtoPP(Pose3D limelightPose){
+        double x = limelightPose.getPosition().toUnit(DistanceUnit.INCH).y + 72;
+        double y = (limelightPose.getPosition().toUnit(DistanceUnit.INCH).x * -1) + 72;
+        double heading = limelightPose.getOrientation().getYaw(AngleUnit.RADIANS);
+        if (heading < 0){
+            heading += (2 * Math.PI);
+        }
+        heading -= (Math.PI/2);
+
+        pose = new Pose(x,y,heading);
     }
 
     public static int blueID = 20;
@@ -59,14 +67,8 @@ public class Limelight {
     }
 
     public void update(Telemetry telemetry) {
-        telemetry.addData("Limelight State", getState());
-        telemetry.addData("output", output);
-        telemetry.addData("target", getTarget());
+        canSeeTag = false;
         LLResult result = limelight.getLatestResult();
-        if (currentState == State.OFF) {
-            output = 0;
-            return;
-        }
         if (!result.isValid()){
             output = 0;
             return;
@@ -82,8 +84,18 @@ public class Limelight {
                 result.getTx();
                 output = p * result.getTx();
             }
+            if (id == blueID || id == redID){
+                canSeeTag = true;
+            }
         }
 
+
+        telemetry.addData("output", output);
+        telemetry.addData("target", getTarget());
+        telemetry.addData("Limelight pose", result.getBotpose().getPosition().toUnit(DistanceUnit.INCH));
+        telemetry.addData("Limelight Heading", result.getBotpose().getOrientation().getYaw(AngleUnit.RADIANS));
+        translateLLtoPP(result.getBotpose());
+        telemetry.addData("Pedro pose", pose);
 
     }
     public double getOutput () {
