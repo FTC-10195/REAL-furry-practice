@@ -9,19 +9,17 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Localizer;
-import org.firstinspires.ftc.teamcode.TeamColor;
 
 @Config
 public class Flywheel {
     public enum States{
         MANUAL,
-        ADAPTIVE,
-        OFF;
+        PASSIVE;
     }
     DcMotorEx FW1;
     DcMotorEx FW2;
     VoltageSensor voltageSensor;
-    public States currentStates = States.OFF;
+    public States currentStates = States.PASSIVE;
     public boolean IsReady = false;
     public static double defaultPower = 0.6;
     public static double increment = 0.1;
@@ -69,7 +67,6 @@ public class Flywheel {
         FW2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
-    public void setCurrentStates(States newState){currentStates = newState;}
     public States getCurrentStates() {
         return currentStates;
     }
@@ -79,11 +76,8 @@ public class Flywheel {
             case MANUAL:
                 FW1.setPower(feedForward(velocityLinearRegression(), voltageSensor.getVoltage()) + pid(FW1.getVelocity(), velocityLinearRegression()));
                 break;
-            //case ADAPTIVE:
-                //FW1.setPower(calculateVelocity());
-                //break;
-            case OFF:
-                FW1.setPower(0);
+            case PASSIVE:
+                FW1.setPower(defaultPower);
         }
         FW2.setPower(FW1.getPower());
     }
@@ -94,6 +88,7 @@ public class Flywheel {
         telemetry.addData("Velocity",FW1.getVelocity());
         telemetry.addData("VoltageSensor",voltageSensor.getVoltage());
         telemetry.addData("Distance From Goal", distance);
+        telemetry.addData("Flywheel Power (NOT VELOCITY)", FW1.getPower());
     }
     public void increase(){
         power = power + increment;

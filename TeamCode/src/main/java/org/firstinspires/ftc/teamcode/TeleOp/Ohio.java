@@ -62,7 +62,7 @@ public class Ohio extends LinearOpMode {
             }
             if (gamepad1.leftBumperWasPressed()) {
                 intake.setState(OFF);
-                flywheel.setState(Flywheel.States.OFF);
+                flywheel.setState(Flywheel.States.PASSIVE);
                 gate.setCurrentState(CLOSE);
             }
             if (gamepad1.square) {
@@ -95,7 +95,7 @@ public class Ohio extends LinearOpMode {
                         intake.setState(OFF);
                         gate.update();
                         break;
-                    case OFF:
+                    case PASSIVE:
                         flywheel.setState(Flywheel.States.MANUAL);
                         break;
                 }

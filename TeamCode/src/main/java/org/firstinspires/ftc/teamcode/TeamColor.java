@@ -19,6 +19,6 @@ public class TeamColor {
         }
     }
     public static void update(Telemetry telemetry){
-        telemetry.addData("CurrentTeamColor", currentTeamColor);
+        telemetry.addData("Current Team Color", currentTeamColor);
     }
 }
